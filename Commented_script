@@ -1,0 +1,72 @@
+#!/bin/bash
+
+# Utilizamos o set-e para caso qualquer erro ocorra ele encerre o script.
+
+# We use set-e so that if any error occurs it terminates the script.
+
+set -e
+
+# Declaramos uma constante com o valor de 150 que utilizaremos como valor de saída padrão para nosso stderr.
+
+# We declare a constant with the value of 150 that we will use as the default output value for our stderr.
+
+readonly SEM_ARGUMENTOS=150
+
+# Criamos uma função que vai encerrar o nosso script caso determinados gatilhos sejam atendidos em nossa condicional futura.
+
+# We have created a function that will terminate our script if certain triggers are met in our future conditional.
+
+encerrar() {
+
+# Armazenamos o valor do primeiro comando inserido no terminal na variável $msg.
+
+# We store the value of the first command entered in the terminal in the $msg variable.
+
+    msg="${1}"
+
+# Armazenaremos o segundo e mais valores inseridos no terminal na variável código, utilizando o valor de 160.
+
+# We will store the second and more values entered at the terminal in the code variable, using the value of 160.
+
+    codigo="${2:-160}"
+
+# Utilizaremos o built in echo que vai passar a string "Error:" seguida de outra string que determinaremos na condicional if-elif. 
+# Também vamos redirecionar o valor da variável $msg como uma stderr.
+
+# We will use the built in echo that will pass the string "Error:" followed by another string that we will determine in the if-elif conditional.
+# We will also redirect the value of the $msg variable as an stderr.
+
+    echo "Error: ${msg}" >&2
+
+# Nosso built in exit vai assumir o valor que passamos na variável código que é 160, quando passarmos 2 ou mais argumentos.
+
+# Our built in exit will take the value we pass in the code variable which is 160, when we pass 2 or more arguments.
+
+    exit "${codigo}" 
+}
+
+# Nossa estrutura é simples, nos pegaremos valores inseridos no terminal armazenados em quantidades na variável especial $#. 
+# Perguntaremos a condicional caso nenhum argumento seja passado, ativaremos a função encerrar que vai concatenar o echo "Error:" com o resto da string após a função.
+# Também vamos substituir o valor padrão do exit pelo valor da nossa constante que é 150.
+
+# Our structure is simple, we will take values entered in the terminal stored in quantities in the special variable $#. 
+# We will ask the conditional if no argument is passed, we will activate the terminate function which will concatenate the echo "Error:" with the rest of the string after the function.
+# We will also replace the default value of exit with the value of our constant which is 150.
+
+if [[ $# -eq 0 ]]; then
+    encerrar "Você não passou um argumento" "${SEM_ARGUMENTOS}"
+
+# Utilizamos a mesma lógica acima, mas agora se for passado 2 ou mais argumentos evocamos a função e concatnamos a string, e utilizaremos o erro que determinamos dentro da função para dois argumentos ou mais que é 160.
+
+# We use the same logic as above, but now if 2 or more arguments are passed we evoke the function and concatenate the string, and use the error we determine within the function for two arguments or more which is 160.
+
+elif [[ $# -gt 1 ]]; then
+    encerrar "Passe apenas um argumento"
+fi
+
+# Por último, caso nenhuma das condições seja ativada, nós saímos da condicional que é o nosso objetivo e passamos uma mensagem bem sucedida, pois passamos apenas um argumento.
+
+# Finally, in case none of the conditions are activated, we exit the conditional which is our goal and pass a successful message as we passed only one argument.
+
+    echo "Parabens, você chegou até a saída utilizando o argumento: ${1}" 
+    
